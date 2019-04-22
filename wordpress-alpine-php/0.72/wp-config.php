@@ -28,6 +28,11 @@ $connectstr_dbname = getenv('DATABASE_NAME');
 $connectstr_dbusername = getenv('DATABASE_USERNAME');
 $connectstr_dbpassword = getenv('DATABASE_PASSWORD');
 
+#Use App Setting value
+$wp_home  =getenv('WP_HOME');
+$wp_siteurl = getenv('WP_HOME');
+$wp_domain_current_site = getenv('WP_HOME');
+
 
 define('DB_NAME', $connectstr_dbname);
 
@@ -94,10 +99,11 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
 	$_SERVER['HTTPS'] = 'on';
 
 //Relative URLs for swapping across app service deployment slots 
-define('WP_HOME', 'http://'. $_SERVER['HTTP_HOST']);
-define('WP_SITEURL', 'http://'. $_SERVER['HTTP_HOST']);
+#This will help with HTTPS redirect and avoid canonical results impacting SEO
+define('WP_HOME', $wp_home);
+define('WP_SITEURL', $wp_siteurl);
 define('WP_CONTENT_URL', '/wp-content');
-define('DOMAIN_CURRENT_SITE', $_SERVER['HTTP_HOST']);
+define('DOMAIN_CURRENT_SITE', $wp_domain_current_site);
 
 /** Absolute path to the WordPress directory. */
 if ( ! defined( 'ABSPATH' ) ) {
