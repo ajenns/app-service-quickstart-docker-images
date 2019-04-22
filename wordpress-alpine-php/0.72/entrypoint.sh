@@ -69,7 +69,7 @@ setup_phpmyadmin(){
 }    
 
 setup_wordpress(){
-	if  [[ ! -e wp-includes/version.php || "$USE_CONINUOUS_INTEGRATION" = true ]; then
+	if  [[ ! -e wp-includes/version.php || "$USE_CONINUOUS_INTEGRATION" = true ]]; then
         echo "INFO: There in no wordpress, going to GIT pull...:"
         while [ -d $WORDPRESS_HOME ]
         do
@@ -160,10 +160,14 @@ if [ "${DATABASE_TYPE}" == "local" ]; then
 fi
 
 # That wp-config.php doesn't exist means WordPress is not installed/configured yet.
-if [ ! -e "$WORDPRESS_HOME/wp-config.php" ]; then
-	echo "INFO: $WORDPRESS_HOME/wp-config.php not found."    
-	echo "Installing WordPress for the first time ..." 
-	setup_wordpress
+if [[ ! -e "$WORDPRESS_HOME/wp-config.php" || "$USE_CONINUOUS_INTEGRATION" = true ]]; then
+	if [[ "$USE_CONINUOUS_INTEGRATION" = true ]]; then
+      echo "Installing WordPress for CI/CD"
+    else
+      echo "INFO: $WORDPRESS_HOME/wp-config.php not found."    
+	  echo "Installing WordPress for the first time ..." 
+	fi
+    setup_wordpress
 fi
 
 if [  -e "$WORDPRESS_HOME/wp-config.php" ]; then
