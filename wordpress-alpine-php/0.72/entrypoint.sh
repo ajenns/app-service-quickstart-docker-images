@@ -5,6 +5,8 @@
 php -v
 
 AZURE_DETECTED=$WEBSITES_ENABLE_APP_SERVICE_STORAGE # if defined, assume the container is running on Azure
+#If being re-run on each existing deployment and needing to update WordPres
+USE_CONTINUOUS_INTEGRATION=true
 
 setup_mariadb_data_dir(){
     test ! -d "$MARIADB_DATA_DIR" && echo "INFO: $MARIADB_DATA_DIR not found. creating ..." && mkdir -p "$MARIADB_DATA_DIR"
@@ -67,7 +69,7 @@ setup_phpmyadmin(){
 }    
 
 setup_wordpress(){
-	if ! [ -e wp-includes/version.php ]; then
+	if  [[ ! -e wp-includes/version.php || "$USE_CONINUOUS_INTEGRATION" = true ]; then
         echo "INFO: There in no wordpress, going to GIT pull...:"
         while [ -d $WORDPRESS_HOME ]
         do
